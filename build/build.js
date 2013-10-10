@@ -10266,18 +10266,25 @@ module.exports = function Magnify(el) {
   var magnifier, target, zoom;
 
   var magnify = function () {
-    el.onmousemove = onMousemove
     $(el).hover(onMouseenter, onMouseleave);
-    // el.addEventListener('mousemove', onMousemove, true)
-    // $(el).on('mousemove', onMousemove);
+    $(el).on('mousemove', onMousemove);
     magnifier = new Magnifier($(el).find('.magnifier').get(0));
     target = new Target($(el).find('img.target').get(0));
     zoom = new Zoom(target.bigImg());
-
-    target.on('load', function () {});
-
     return this;
   }.call(eventy({}));
+
+  (function () {
+    target.on('load', function () {});
+
+    magnifier.on('percent-x', function (percentage) {
+      zoom.percentX(percentage);
+    });
+
+    magnifier.on('percent-y', function (percentage) {
+      zoom.percentY(percentage);
+    });
+  })();
 
   function onMouseenter(mouseenter) {
     magnifier.show();
@@ -10297,10 +10304,6 @@ module.exports = function Magnify(el) {
   }
 
   function onMousemove(mousemove) {
-    // console.log('pageY', mousemove.pageY)
-    // console.log('clientY', mousemove.clientY)
-    // console.log('screenY', mousemove.screenY)
-    // console.log('offsetY', mousemove.offsetY)
     var obj = el.getBoundingClientRect();
 
     el.pageX = obj.left + window.pageXOffset;
@@ -10313,12 +10316,6 @@ module.exports = function Magnify(el) {
 
     magnifier.offsetX(offsetX);
     magnifier.offsetY(offsetY);
-
-    zoom.percentX(percentX);
-    zoom.percentY(percentY);
-
-    // console.log("percentX", percentX)
-    // console.log("percentY", percentY)
   }
 
   magnify.width = function () {
