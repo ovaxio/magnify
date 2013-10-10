@@ -1,0 +1,24 @@
+{
+  "name": "magnify",
+  "repo": "shallker-wang/magnify",
+  "description": "Magnify",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "component/jquery": "*",
+    "shallker-wang/eventy": "*"
+  },
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": [
+    "index.js",
+    "lib/magnify.js",
+    "lib/magnifier.js",
+    "lib/target.js",
+    "lib/zoom.js"
+  ],
+  "styles": [
+    "css/magnify.css"
+  ]
+}

@@ -1,0 +1,39 @@
+.component.magnify        
+  position relative
+  display inline-block
+
+  img.target
+    cursor crosshair
+
+  .magnifier
+    display none
+    width 100px
+    height 100px
+    background-color yellow
+    opacity 0.4
+    position absolute
+    top 0
+    left 0
+    cursor crosshair
+
+  &:hover
+    .magnifier
+      display block
+
+  .zoom-view
+    display none
+    position absolute
+    top 0
+    left 100%
+    margin-left 20px
+    border 1px solid gray
+    overflow hidden
+
+    img.big
+      position absolute
+      top 0
+      left 0
+
+  &:hover
+    .zoom-view
+      display block

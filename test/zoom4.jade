@@ -1,0 +1,30 @@
+html
+  head
+    title Test
+    meta(charset="utf-8")
+    link(rel="stylesheet", href="../build/build.css")
+    script(src="../build/build.js")
+
+  body
+    .component.magnify
+      img.target(src="img/leopard-500.jpg")
+      .magnifier(style="width: 100px; height: 100px;")
+      .zoom-view
+        img.big(src="img/leopard-1000.jpg")
+
+    p
+    code magnify.zoom(4);
+    br
+    code magnify.scale(4);
+
+   script
+      var Magnify = require('magnify');
+      var $ = require('jquery')
+
+      $(function () {
+        $('.component.magnify').each(function (i, el) {
+          window.magnify = new Magnify(el);
+          magnify.zoom(4);
+          magnify.scale(4);
+        });
+      });
