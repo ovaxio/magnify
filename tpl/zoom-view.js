@@ -1,0 +1,1 @@
+module.exports = '<div class="magnify">\n  <div class="zoom-view"><img src="" class="big"/></div>\n</div>';

@@ -2,7 +2,7 @@
   "name": "magnify",
   "repo": "shallker-wang/magnify",
   "description": "Magnify",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": [],
   "dependencies": {
     "component/jquery": "*",
@@ -16,7 +16,8 @@
     "lib/magnify.js",
     "lib/magnifier.js",
     "lib/target.js",
-    "lib/zoom.js"
+    "lib/zoom.js",
+    "tpl/zoom-view.js"
   ],
   "styles": [
     "css/magnify.css"
