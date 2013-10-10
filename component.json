@@ -16,7 +16,8 @@
     "lib/magnify.js",
     "lib/magnifier.js",
     "lib/target.js",
-    "lib/zoom.js"
+    "lib/zoom.js",
+    "tpl/zoom-view.js"
   ],
   "styles": [
     "css/magnify.css"
