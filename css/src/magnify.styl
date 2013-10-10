@@ -1,4 +1,4 @@
-.component.magnify        
+.component.magnify       
   position relative
   display inline-block
 
@@ -20,20 +20,19 @@
     .magnifier
       display block
 
+.magnify
   .zoom-view
     display none
+    overflow hidden
     position absolute
     top 0
-    left 100%
-    margin-left 20px
+    left 0
     border 1px solid gray
-    overflow hidden
+
+    &.active
+      display block
 
     img.big
       position absolute
       top 0
       left 0
-
-  &:hover
-    .zoom-view
-      display block
