@@ -10274,42 +10274,25 @@ module.exports = function Magnify(el) {
     target = new Target($(el).find('img.target').get(0));
     zoom = new Zoom(target.bigImg());
 
-    target.on('load', function () {
-      zoom.targetWidth(target.width());
-      zoom.targetHeight(target.height());
-      zoom.left(target.pageX() + target.width() + 20);
-      zoom.top(target.pageY());
-    });
+    target.on('load', function () {});
 
     return this;
   }.call(eventy({}));
 
-  (function () {
+  function onMouseenter(mouseenter) {
+    magnifier.show();
+    zoom.left(target.pageX() + target.width() + 20);
+    zoom.top(target.pageY());
+    zoom.targetWidth(target.width());
+    zoom.targetHeight(target.height());
     zoom.magnifierWidth(magnifier.elementWidth());
     zoom.magnifierHeight(magnifier.elementHeight());
-
-    magnify.on('offset-x', function (distance) {
-      magnifier.offsetX(distance);
-    });
-
-    magnify.on('offset-y', function (distance) {
-      magnifier.offsetY(distance);
-    });
-
-    magnifier.on('percent-x', function (percentage) {
-      zoom.percentX(percentage);
-    });
-
-    magnifier.on('percent-y', function (percentage) {
-      zoom.percentY(percentage);
-    });
-  })();
-
-  function onMouseenter(mouseenter) {
+    zoom.resize();
     zoom.show();
   }
 
   function onMouseleave(mouseleave) {
+    magnifier.hide();
     zoom.hide();
   }
 
@@ -10328,10 +10311,11 @@ module.exports = function Magnify(el) {
     var percentX = offsetX / magnify.width() * 100;
     var percentY = offsetY / magnify.height() * 100;
 
-    magnify.trigger('offset-x', offsetX)
-    magnify.trigger('offset-y', offsetY)
-    magnify.trigger('percent-x', percentX)
-    magnify.trigger('percent-y', percentY)
+    magnifier.offsetX(offsetX);
+    magnifier.offsetY(offsetY);
+
+    zoom.percentX(percentX);
+    zoom.percentY(percentY);
 
     // console.log("percentX", percentX)
     // console.log("percentY", percentY)
@@ -10415,6 +10399,14 @@ module.exports = function Magnifier(el) {
     }
 
     return elementHeight;
+  }
+
+  magnifier.show = function () {
+    $(el).addClass('active');
+  }
+
+  magnifier.hide = function () {
+    $(el).removeClass('active');
   }
 
   magnifier.width = function () {
@@ -10525,14 +10517,14 @@ module.exports = function Zoom(bigImg) {
     var imgWidth = $(img).width();
     var maxLeft = imgWidth - zoom.width();
 
-    $(img).css('left', '-' + percentage / 100 * maxLeft);
+    $(img).css('left', '-' + percentage / 100 * maxLeft + 'px');
   }
 
   zoom.percentY = function (percentage) {
     var imgHeight = $(img).height();
     var maxTop = imgHeight - zoom.height();
 
-    $(img).css('top', '-' + percentage / 100 * maxTop);
+    $(img).css('top', '-' + percentage / 100 * maxTop + 'px');
   }
 
   zoom.targetWidth = function (width) {
@@ -10568,6 +10560,8 @@ module.exports = function Zoom(bigImg) {
   zoom.resize = function () {
     $(img).width(target.width * this.level);
     $(img).height(target.height * this.level);
+    $(img).css('maxWidth', target.width * this.level);
+    $(img).css('maxHeight', target.height * this.level);
     this.width(magnifier.width * this.scale);
     this.height(magnifier.height * this.scale);
   }
