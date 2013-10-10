@@ -2,7 +2,7 @@
   "name": "magnify",
   "repo": "shallker-wang/magnify",
   "description": "Magnify",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": [],
   "dependencies": {
     "component/jquery": "*",
