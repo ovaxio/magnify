@@ -10267,15 +10267,18 @@ module.exports = function Magnify(el) {
 
   var magnify = function () {
     el.onmousemove = onMousemove
+    $(el).hover(onMouseenter, onMouseleave);
     // el.addEventListener('mousemove', onMousemove, true)
     // $(el).on('mousemove', onMousemove);
     magnifier = new Magnifier($(el).find('.magnifier').get(0));
     target = new Target($(el).find('img.target').get(0));
-    zoom = new Zoom($(el).find('.zoom-view').get(0));
+    zoom = new Zoom(target.bigImg());
 
     target.on('load', function () {
       zoom.targetWidth(target.width());
       zoom.targetHeight(target.height());
+      zoom.left(target.pageX() + target.width() + 20);
+      zoom.top(target.pageY());
     });
 
     return this;
@@ -10302,6 +10305,38 @@ module.exports = function Magnify(el) {
     });
   })();
 
+  function onMouseenter(mouseenter) {
+    zoom.show();
+  }
+
+  function onMouseleave(mouseleave) {
+    zoom.hide();
+  }
+
+  function onMousemove(mousemove) {
+    // console.log('pageY', mousemove.pageY)
+    // console.log('clientY', mousemove.clientY)
+    // console.log('screenY', mousemove.screenY)
+    // console.log('offsetY', mousemove.offsetY)
+    var obj = el.getBoundingClientRect();
+
+    el.pageX = obj.left + window.pageXOffset;
+    el.pageY = obj.top + window.pageYOffset;
+
+    var offsetX = mousemove.pageX - el.pageX;
+    var offsetY = mousemove.pageY - el.pageY;
+    var percentX = offsetX / magnify.width() * 100;
+    var percentY = offsetY / magnify.height() * 100;
+
+    magnify.trigger('offset-x', offsetX)
+    magnify.trigger('offset-y', offsetY)
+    magnify.trigger('percent-x', percentX)
+    magnify.trigger('percent-y', percentY)
+
+    // console.log("percentX", percentX)
+    // console.log("percentY", percentY)
+  }
+
   magnify.width = function () {
     return el.clientWidth;
   }
@@ -10318,25 +10353,6 @@ module.exports = function Magnify(el) {
   magnify.scale = function (level) {
     zoom.scale = level;
     zoom.resize();
-  }
-
-  function onMousemove(mousemove) {
-    // console.log('pageY', mousemove.pageY)
-    // console.log('clientY', mousemove.clientY)
-    // console.log('screenY', mousemove.screenY)
-    // console.log('offsetY', mousemove.offsetY)
-    var offsetX = mousemove.pageX - el.offsetLeft;
-    var offsetY = mousemove.pageY - el.offsetTop;
-    var percentX = offsetX / magnify.width() * 100;
-    var percentY = offsetY / magnify.height() * 100;
-
-    magnify.trigger('offset-x', offsetX)
-    magnify.trigger('offset-y', offsetY)
-    magnify.trigger('percent-x', percentX)
-    magnify.trigger('percent-y', percentY)
-
-    // console.log("percentX", percentX)
-    // console.log("percentY", percentY)
   }
 
   return magnify;
@@ -10445,9 +10461,12 @@ module.exports = function Target(img) {
     return this;
   }.call(eventy({}));
 
-
   function onLoad() {
     target.trigger('load');
+  }
+
+  target.bigImg = function () {
+    return $(img).attr('big');
   }
 
   target.width = function () {
@@ -10458,27 +10477,44 @@ module.exports = function Target(img) {
     return img.clientHeight;
   }
 
+  target.pageX = function () {
+    var rect = img.getBoundingClientRect();
+    return rect.left + window.pageXOffset;
+  }
+
+  target.pageY = function () {
+    var rect = img.getBoundingClientRect();
+    return rect.top + window.pageYOffset;
+  }
+
   return target;
 }
+
 });
 require.register("magnify/lib/zoom.js", function(exports, require, module){
 var jQuery = jQuery || require('jquery');
+var tpl = require('../tpl/zoom-view');
 var eventy = require('eventy');
 var $ = jQuery;
 
-module.exports = function Zoom(el) {
-  var img;
+module.exports = function Zoom(bigImg) {
+  var el, img;
+
   var target = {
     width: 0,
     height: 0
   }
+
   var magnifier = {
     width: 0,
     height: 0
   }
 
   var zoom = function () {
+    var view = $(tpl).appendTo('body');
+    el = $(view).find('.zoom-view').get(0);
     img = $(el).find('img.big').get(0);
+    $(img).attr('src', bigImg);
     return this;
   }.call(eventy({}));
 
@@ -10536,8 +10572,27 @@ module.exports = function Zoom(el) {
     this.height(magnifier.height * this.scale);
   }
 
+  zoom.left = function (left) {
+    $(el).css('left', left);
+  }
+
+  zoom.top = function (top) {
+    $(el).css('top', top);
+  }
+
+  zoom.show = function () {
+    $(el).addClass('active');
+  }
+
+  zoom.hide = function () {
+    $(el).removeClass('active');
+  }
+
   return zoom;
 }
+});
+require.register("magnify/tpl/zoom-view.js", function(exports, require, module){
+module.exports = '<div class="magnify">\n  <div class="zoom-view"><img src="" class="big"/></div>\n</div>';
 });
 
 
