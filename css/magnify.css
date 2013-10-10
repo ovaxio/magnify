@@ -1,7 +1,7 @@
 .component.magnify{position:relative;display:inline-block;}
 .component.magnify img.target{cursor:crosshair}
-.component.magnify .magnifier{display:none;width:100px;height:100px;background-color:#ff0;opacity:.4;position:absolute;top:0;left:0;cursor:crosshair}
-.component.magnify:hover .magnifier{display:block}
+.component.magnify .magnifier{display:none;width:100px;height:100px;background-color:#ff0;opacity:.4;position:absolute;top:0;left:0;cursor:crosshair;}
+.component.magnify .magnifier.active{display:block}
 .magnify .zoom-view{display:none;overflow:hidden;position:absolute;top:0;left:0;border:1px solid #808080;}
 .magnify .zoom-view.active{display:block}
 .magnify .zoom-view img.big{position:absolute;top:0;left:0}
